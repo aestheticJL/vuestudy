@@ -12,7 +12,7 @@
             </el-form-item>
             <el-form-item prop="password">
                 <el-input type="password" v-model="loginForm.password" auto-complete="off"
-                          placeholder="请输入密码"/>
+                          placeholder="请输入密码" @keydown.enter.native="submitLogin"/>
             </el-form-item>
             <el-checkbox v-model="checked" class="rememberMe">记住我</el-checkbox>
             <el-button type="primary" style="width: 100%" @click="submitLogin">登录</el-button>
@@ -21,8 +21,6 @@
 </template>
 
 <script>
-    import {postKeyValueRequest} from "../utils/api";
-
     export default {
         name: "Login",
         data() {
@@ -42,9 +40,11 @@
             submitLogin() {
                 this.$refs.loginForm.validate((valid) => {
                     if (valid) {
-                        postKeyValueRequest('/doLogin', this.loginForm).then(resp => {
+                        this.postKeyValueRequest('/doLogin', this.loginForm).then(resp => {
                             if (resp) {
-                                alert(JSON.stringify(resp))
+                                window.sessionStorage.setItem("user",JSON.stringify(resp.obj));
+                                let path = this.$route.query.redirect;
+                                this.$router.replace((path==='/' || path===undefined)?'/home':path);
                             }
                         })
                     } else {
