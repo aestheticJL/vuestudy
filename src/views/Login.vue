@@ -1,6 +1,13 @@
 <template>
     <div>
-        <el-form :rules="rules" :model="loginForm" class="loginContainer" ref="loginForm">
+        <el-form :rules="rules"
+                 :model="loginForm"
+                 class="loginContainer"
+                 ref="loginForm"
+                 v-loading="loading"
+                 element-loading-text="登录中"
+                 element-loading-spinner="el-icon-loading"
+                 element-loading-background="rgba(0, 0, 0, 0.8)">
             <el-form-item>
                 <h1 class="loginTitle">
                     系统登录
@@ -29,6 +36,7 @@
                     username: '',
                     password: ''
                 },
+                loading:'',
                 rules: {
                     username: [{required: true, message: '请输入用户名', trigger: 'blur'}],
                     password: [{required: true, message: '请输入密码', trigger: 'blur'}]
@@ -40,7 +48,9 @@
             submitLogin() {
                 this.$refs.loginForm.validate((valid) => {
                     if (valid) {
+                        this.loading = true;
                         this.postKeyValueRequest('/doLogin', this.loginForm).then(resp => {
+                            this.loading = false;
                             if (resp) {
                                 window.sessionStorage.setItem("user",JSON.stringify(resp.obj));
                                 let path = this.$route.query.redirect;

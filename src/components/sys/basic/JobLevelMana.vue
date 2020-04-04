@@ -17,6 +17,10 @@
         </el-select>
         <el-button type="primary" size="small" prefix-icon="el-icon-plus" @click="addJobLevel">添加</el-button>
         <el-table
+                v-loading="loading"
+                element-loading-text="加载中"
+                element-loading-spinner="el-icon-loading"
+                element-loading-background="rgba(0, 0, 0, 0.8)"
                 border
                 stripe
                 ref="multipleTable"
@@ -138,7 +142,8 @@
                 ],
                 jobLevel: [],
                 multipleSelection: [],
-                dialogVisible: false
+                dialogVisible: false,
+                loading: false,
             }
         },
         mounted() {
@@ -149,7 +154,9 @@
                 this.multipleSelection = val;
             },
             initJobLevel() {
+                this.loading = true;
                 this.getRequest("/system/basic/joblevel/").then(resp => {
+                    this.loading = false;
                     if (resp) {
                         this.jobLevel = resp;
                     }

@@ -1,6 +1,10 @@
 <template>
     <div>
         <el-input
+                v-loading="loading"
+                element-loading-text="加载中"
+                element-loading-spinner="el-icon-loading"
+                element-loading-background="rgba(0, 0, 0, 0.8)"
                 size="small"
                 style="width: 300px;margin-right: 13px"
                 placeholder="请添加职位"
@@ -104,7 +108,8 @@
                 },
                 Position: [],
                 multipleSelection: [],
-                dialogVisible: false
+                dialogVisible: false,
+                loading:''
             }
         },
         mounted() {
@@ -115,7 +120,9 @@
                 this.multipleSelection = val;
             },
             initPosition() {
+                this.loading = true;
                 this.getRequest("/system/basic/pos/").then(resp => {
+                    this.loading = false;
                     if (resp) {
                         this.Position = resp;
                     }
