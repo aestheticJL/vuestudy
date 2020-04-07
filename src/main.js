@@ -23,18 +23,18 @@ Vue.config.productionTip = false;
 
 Vue.use(ElementUI,{size:'small'});
 
-router.beforeEach((to,from,next)=>{
-    if (to.path === '/'){
+router.beforeEach((to, from, next) => {
+    if (to.path === '/') {
         next();
-    }else {
+    } else {
         if (window.sessionStorage.getItem("user")) {
             initMenu(router, store);
             next();
-        }else {
-            next('/?redirect='+to.path);
+        } else {
+            next('/?redirect=' + to.path);
         }
     }
-})
+});
 
 new Vue({
     router,
